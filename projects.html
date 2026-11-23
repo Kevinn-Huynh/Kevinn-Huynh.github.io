@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Projects by Kevin Huynh: battery management hardware, high-voltage PCBs and simulation for Formula SAE electric.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<title>Projects · Kevin Huynh</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<script>try{var t=localStorage.getItem("kh-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-page="projects">
+<main>
+  <div class="wrap">
+    <div class="page-head">
+      <h1>Projects</h1>
+      <p>Formula SAE electric hardware, simulation and coursework. Filter by topic or search by name.</p>
+    </div>
+    <div class="filters" id="filters" role="group" aria-label="Filter projects by tag"></div>
+    <p class="mono count" id="count" aria-live="polite"></p>
+    <div class="cards" id="grid"></div>
+    <p class="empty" id="empty" hidden>No projects match that search. Try a different word or choose All.</p>
+    <div style="height:56px"></div>
+  </div>
+</main>
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  var K = window.Kit, P = K.projects;
+  var filters = document.getElementById("filters"), grid = document.getElementById("grid"), count = document.getElementById("count"), empty = document.getElementById("empty");
+  var tagMap = {}, order = [];
+  P.forEach(function (p) { (p.tags || []).forEach(function (t) { var s = K.slugify(t); if (!tagMap[s]) { tagMap[s] = { name: t, n: 0 }; order.push(s); } tagMap[s].n++; }); });
+  order.sort(function (a, b) { return tagMap[b].n - tagMap[a].n || tagMap[a].name.localeCompare(tagMap[b].name); });
+  var state = { tag: location.hash.replace("#", "") || "all", q: "" };
+  if (state.tag !== "all" && !tagMap[state.tag]) state.tag = "all";
+
+  var search = K.el("input", "search"); search.type = "search"; search.id = "q"; search.placeholder = "Search projects"; search.setAttribute("aria-label", "Search projects");
+  var chips = {};
+  function addChip(slug, label) {
+    var b = K.el("button", "chip", label); b.type = "button"; b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", function () {
+      state.tag = slug; render();
+      try { history.replaceState(null, "", slug === "all" ? location.pathname : "#" + slug); } catch (e) {}
+    });
+    chips[slug] = b; filters.appendChild(b);
+  }
+  addChip("all", "All (" + P.length + ")");
+  order.forEach(function (s) { addChip(s, tagMap[s].name + " (" + tagMap[s].n + ")"); });
+  filters.appendChild(search);
+  search.addEventListener("input", function () { state.q = search.value.trim().toLowerCase(); render(); });
+
+  function render() {
+    Object.keys(chips).forEach(function (s) { chips[s].setAttribute("aria-pressed", s === state.tag ? "true" : "false"); });
+    grid.textContent = "";
+    var shown = P.filter(function (p) {
+      var okTag = state.tag === "all" || (p.tags || []).some(function (t) { return K.slugify(t) === state.tag; });
+      var hay = (p.title + " " + (p.summary || "") + " " + (p.tags || []).join(" ")).toLowerCase();
+      return okTag && (!state.q || hay.indexOf(state.q) !== -1);
+    });
+    shown.forEach(function (p) { grid.appendChild(K.projectCard(p)); });
+    count.textContent = shown.length + (shown.length === 1 ? " project" : " projects");
+    empty.hidden = shown.length > 0;
+  }
+  window.addEventListener("hashchange", function () {
+    var h = location.hash.replace("#", "") || "all";
+    if (h === "all" || tagMap[h]) { state.tag = h; render(); }
+  });
+  render();
+})();
+</script>
+</body>
+</html>

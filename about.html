@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Experience, skills and education of Kevin Huynh, electrical engineering co-op student at the University of Windsor.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<title>About · Kevin Huynh</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<script>try{var t=localStorage.getItem("kh-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-page="about">
+<main>
+  <div class="wrap">
+    <div class="page-head">
+      <h1>About</h1>
+      <p>Electrical engineering co-op student at the University of Windsor, focused on high-voltage battery systems, BMS hardware and PCB design.</p>
+    </div>
+  </div>
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><h2>Experience</h2></div>
+      <div class="timeline" id="exp"></div>
+    </div>
+  </section>
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><h2>Skills</h2></div>
+      <div class="skill-groups" id="skills"></div>
+      <p class="skill-note">Skills with an orange outline are linked to projects that use them.</p>
+    </div>
+  </section>
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><h2>Education and other work</h2></div>
+      <div class="timeline" id="more"></div>
+    </div>
+  </section>
+</main>
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  var K = window.Kit, S = K.site;
+  var exp = document.getElementById("exp");
+  S.experience.forEach(function (j) {
+    var row = K.el("div", "job"), l = K.el("div");
+    l.appendChild(K.el("span", "mono", j.dates));
+    l.appendChild(K.el("h3", null, j.role));
+    l.appendChild(K.el("p", "org", j.org + (j.place ? ", " + j.place : "")));
+    row.appendChild(l);
+    var r = K.el("div"), ul = K.el("ul");
+    j.bullets.forEach(function (b) { ul.appendChild(K.el("li", null, b)); });
+    r.appendChild(ul);
+    if (j.link) { var a = K.el("a", null, j.link.label + " →"); a.href = j.link.url; a.style.display = "inline-block"; a.style.marginTop = "6px"; r.appendChild(a); }
+    row.appendChild(r); exp.appendChild(row);
+  });
+
+  var tags = {};
+  K.projects.forEach(function (p) { (p.tags || []).forEach(function (t) { tags[K.slugify(t)] = true; }); });
+  var sk = document.getElementById("skills");
+  S.skills.forEach(function (g) {
+    var box = K.el("div"); box.appendChild(K.el("h3", null, g.group));
+    var ul = K.el("ul");
+    g.items.forEach(function (it) {
+      var li = K.el("li"), s = K.slugify(it);
+      if (tags[s]) { var a = K.el("a", null, it); a.href = "projects.html#" + s; li.appendChild(a); }
+      else li.appendChild(K.el("span", null, it));
+      ul.appendChild(li);
+    });
+    box.appendChild(ul); sk.appendChild(box);
+  });
+
+  var more = document.getElementById("more");
+  var ed = S.education, er = K.el("div", "job edu"), el2 = K.el("div");
+  el2.appendChild(K.el("span", "mono", ed.dates)); el2.appendChild(K.el("h3", null, ed.degree)); el2.appendChild(K.el("p", "org", ed.school));
+  er.appendChild(el2); er.appendChild(K.el("p", "text", "Honours program with co-op work terms."));
+  more.appendChild(er);
+  S.more.forEach(function (m) {
+    var row = K.el("div", "job"), l = K.el("div");
+    l.appendChild(K.el("span", "mono", m.dates)); l.appendChild(K.el("h3", null, m.role)); l.appendChild(K.el("p", "org", m.org));
+    row.appendChild(l); row.appendChild(K.el("p", "text", m.text)); more.appendChild(row);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="A project by Kevin Huynh.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<title>Project · Kevin Huynh</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<script>try{var t=localStorage.getItem("kh-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-page="projects">
+<main id="project"></main>
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  var K = window.Kit, P = K.projects, host = document.getElementById("project");
+
+  function render() {
+    var slug = location.hash.replace("#", "");
+    var i = -1;
+    P.forEach(function (p, k) { if (p.slug === slug) i = k; });
+    host.textContent = "";
+    window.scrollTo(0, 0);
+    if (i < 0) {
+      document.title = "Project not found · Kevin Huynh";
+      var w = K.el("div", "wrap"); var h = K.el("div", "detail-head");
+      h.appendChild(K.el("h1", null, "Project not found"));
+      h.appendChild(K.el("p", "lede", "That project link does not match anything. Pick one from the list."));
+      var a = K.el("a", "btn solid", "All projects"); a.href = "projects.html"; h.appendChild(a);
+      w.appendChild(h); host.appendChild(w); return;
+    }
+    var p = P[i];
+    document.title = p.title + " · Kevin Huynh";
+
+    var head = K.el("div", "wrap detail-head");
+    var back = K.el("a", "back", "← All projects"); back.href = "projects.html"; head.appendChild(back);
+    head.appendChild(K.el("div", "mono", p.date));
+    head.appendChild(K.el("h1", null, p.title));
+    if (p.summary) head.appendChild(K.el("p", "lede", p.summary));
+    if (p.tags && p.tags.length) {
+      var ul = K.el("ul", "tags");
+      p.tags.forEach(function (t) { var li = K.el("li"); var a2 = K.el("a", null, t); a2.href = "projects.html#" + K.slugify(t); li.appendChild(a2); ul.appendChild(li); });
+      head.appendChild(ul);
+    }
+    host.appendChild(head);
+
+    var hasMedia = p.media && p.media.length;
+    var grid = K.el("div", "wrap detail-grid");
+    if (!hasMedia) grid.style.gridTemplateColumns = "minmax(0, 46rem)";
+    var left = K.el("div");
+    if (p.highlights && p.highlights.length) {
+      left.appendChild(K.el("h2", null, "What I did"));
+      var pts = K.el("ul", "points");
+      p.highlights.forEach(function (t) { pts.appendChild(K.el("li", null, t)); });
+      left.appendChild(pts);
+    }
+    if (p.links && p.links.length) {
+      var lk = K.el("div", "links");
+      p.links.forEach(function (l) { var b = K.el("a", "btn", l.label); b.href = l.url; b.target = "_blank"; b.rel = "noopener"; lk.appendChild(b); });
+      left.appendChild(lk);
+    }
+    grid.appendChild(left);
+    if (hasMedia) {
+      var figs = K.el("div", "figs");
+      p.media.forEach(function (m) { figs.appendChild(K.mediaFigure(m)); });
+      grid.appendChild(figs);
+    }
+    host.appendChild(grid);
+
+    var pager = K.el("nav", "wrap pager"); pager.setAttribute("aria-label", "More projects");
+    if (i > 0) { var pa = K.el("a", "prev"); pa.href = "project.html#" + P[i - 1].slug; pa.appendChild(K.el("span", "mono", "← Previous")); pa.appendChild(K.el("strong", null, P[i - 1].title)); pager.appendChild(pa); }
+    if (i < P.length - 1) { var na = K.el("a", "next"); na.href = "project.html#" + P[i + 1].slug; na.appendChild(K.el("span", "mono", "Next →")); na.appendChild(K.el("strong", null, P[i + 1].title)); pager.appendChild(na); }
+    host.appendChild(pager);
+  }
+
+  document.addEventListener("keydown", function (e) {
+    var tag = (document.activeElement && document.activeElement.tagName) || "";
+    if (tag === "INPUT" || tag === "TEXTAREA" || e.metaKey || e.ctrlKey || e.altKey) return;
+    var lb = document.getElementById("lb"); if (lb && !lb.hidden) return;
+    var slug = location.hash.replace("#", ""), i = -1;
+    P.forEach(function (p, k) { if (p.slug === slug) i = k; });
+    if (i < 0) return;
+    if (e.key === "ArrowLeft" && i > 0) location.hash = P[i - 1].slug;
+    if (e.key === "ArrowRight" && i < P.length - 1) location.hash = P[i + 1].slug;
+  });
+  window.addEventListener("hashchange", render);
+  render();
+})();
+</script>
+</body>
+</html>

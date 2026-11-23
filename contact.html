@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Get in touch with Kevin Huynh about electrical engineering co-op and project opportunities.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<title>Contact · Kevin Huynh</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<script>try{var t=localStorage.getItem("kh-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body data-page="contact">
+<main>
+  <div class="wrap">
+    <div class="page-head">
+      <h1>Contact</h1>
+      <p>Looking for electrical engineering co-op and project opportunities in battery systems, power electronics and embedded hardware.</p>
+    </div>
+    <div class="contact-grid">
+      <div>
+        <h2>Reach me directly</h2>
+        <div class="email-line">
+          <span class="email" id="email"></span>
+          <button class="btn" id="copy" type="button">Copy email</button>
+        </div>
+        <p>You can also find me on LinkedIn.</p>
+        <a class="btn solid" id="li" href="#" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <form class="form" id="form">
+        <h2>Write a message</h2>
+        <label for="name">Your name<input id="name" autocomplete="name"></label>
+        <label for="subject">Subject<input id="subject" value="Hello from your portfolio"></label>
+        <label for="msg">Message<textarea id="msg" placeholder="Hi Kevin, ..."></textarea></label>
+        <button class="btn solid" type="submit">Open email draft</button>
+        <p class="hint">This opens your email app with the message filled in. If nothing opens, copy my address from the left and write to me directly.</p>
+      </form>
+    </div>
+  </div>
+</main>
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  var S = window.Kit.site;
+  var em = document.getElementById("email"); em.textContent = S.email;
+  document.getElementById("li").href = S.linkedin;
+  var btn = document.getElementById("copy");
+  btn.addEventListener("click", function () {
+    function pick() {
+      var rg = document.createRange(); rg.selectNodeContents(em);
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(rg);
+      btn.textContent = "Selected, press copy";
+    }
+    try {
+      navigator.clipboard.writeText(S.email).then(function () {
+        btn.textContent = "Copied";
+        setTimeout(function () { btn.textContent = "Copy email"; }, 1800);
+      }, pick);
+    } catch (e) { pick(); }
+  });
+  document.getElementById("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = document.getElementById("name").value.trim();
+    var body = document.getElementById("msg").value + (name ? "\n\n" + name : "");
+    var url = "mailto:" + S.email + "?subject=" + encodeURIComponent(document.getElementById("subject").value) + "&body=" + encodeURIComponent(body);
+    window.location.href = url;
+  });
+})();
+</script>
+</body>
+</html>
