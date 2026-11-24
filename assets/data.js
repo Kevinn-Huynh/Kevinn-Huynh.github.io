@@ -84,6 +84,12 @@ window.SITE = {
   function col(key, k) { return SWEEP.map(function (r) { return +(r[key] * (k || 1)).toFixed(3); }); }
   var xs = SWEEP.map(function (r) { return r.v; });
 
+/* Endurance simulation, current pack: per-lap results from the team mastersheet. */
+var LAPS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
+var LAP_PEAK = [52.344, 52.701, 52.987, 53.312, 53.83, 54.468, 55.008, 55.469, 56.007, 56.582, 57.224, 57.99, 58.67, 59.314, 60.006, 60.749, 61.512, 62.386, 63.38, 66.601, 75.428, 81.414];
+var LAP_MEAN = [32.268, 32.702, 32.903, 33.084, 33.348, 33.722, 34.093, 34.399, 34.708, 35.062, 35.41, 35.876, 36.316, 36.715, 37.143, 37.573, 38.049, 38.554, 39.063, 40.243, 43.394, 53.309];
+var LAP_SOC = [95.9, 91.7, 87.5, 83.2, 79.0, 74.7, 70.3, 65.9, 61.4, 57.0, 52.4, 47.8, 43.2, 38.5, 33.7, 28.9, 24.0, 19.1, 14.1, 8.9, 3.4, 2.5];
+
   window.PROJECTS = [
     {
       slug: "fsae-battery-subteam-lead",
@@ -162,14 +168,28 @@ window.SITE = {
       slug: "openlap-energy-and-current-study",
       title: "OpenLap Energy and Current Study",
       date: "Formula SAE electric · Simulation",
+      featured: true,
+      cover: "images/openlap-laptime-sweep.jpg",
       summary: "Lap simulation for the electric car, used to see how much energy endurance takes and what the battery has to deliver.",
       highlights: [
         "Ran OpenLap for acceleration, endurance and autocross lap times.",
-        "Used the endurance simulation to estimate energy consumption over the event.",
-        "Took the OpenLap data into Batemo to find the current pull throughout endurance."
+        "Swept power limit and speed limit against a 245 Wh per lap energy budget. The fastest lap that fits the budget is 60.4 s at 35 kW and 22 m/s, which costs 4.0 s against the unlimited 56.5 s lap that needs about 388 Wh.",
+        "Used the endurance simulation to estimate energy consumption over the event: 13.05 Ah and 5186 Wh drawn over 22 laps.",
+        "Took the OpenLap data into Batemo to find the current pull throughout endurance: peak pack current 81.4 A (16.3 A per cell) on the last lap, with mean and RMS of 36.0 A and 43.5 A.",
+        "With the current pack the car finishes 21.1 of 22 laps and ends at 2.5% state of charge. I also modelled a proposed pack at 235 Wh per lap."
       ],
       tags: ["OpenLap", "Batemo", "MATLAB", "Simulation"],
-      media: []
+      media: [
+        { type: "image", src: "images/openlap-endurance-pack-current.jpg", alt: "Endurance simulation plots of pack current, state of charge, pack voltage and per-lap peak current over 22 laps", caption: "Endurance run: pack current, SOC, pack voltage and peak current per lap", wide: true },
+        { type: "chart", title: "Pack current by lap", xLabel: "Lap (#)", yLabel: "Current (A)", x: LAPS,
+          series: [{ name: "Peak current", y: LAP_PEAK }, { name: "Mean current", y: LAP_MEAN }],
+          note: "Current rises each lap as the pack voltage sags, then jumps over the last three laps." },
+        { type: "chart", title: "State of charge at end of each lap", xLabel: "Lap (#)", yLabel: "SOC (%)", x: LAPS,
+          series: [{ name: "State of charge", y: LAP_SOC }], yMin: 0, yMax: 100,
+          note: "From the endurance simulation with the current pack." },
+        { type: "image", src: "images/openlap-laptime-sweep.jpg", alt: "3D surface of lap time against power limit and speed limit, coloured by battery energy per lap", caption: "Lap time sweep against power and speed limit" },
+        { type: "image", src: "images/openlap-laptime-energy-contours.jpg", alt: "Contour plot of lap time with battery energy contours and the 245 Wh per lap budget outlined in red", caption: "Lap time with energy contours, 245 Wh per lap budget in red" }
+      ]
     },
     {
       slug: "autonomous-robot-car",
