@@ -95,6 +95,8 @@ var LAP_SOC = [95.9, 91.7, 87.5, 83.2, 79.0, 74.7, 70.3, 65.9, 61.4, 57.0, 52.4,
       slug: "fsae-battery-subteam-lead",
       title: "FSAE Battery Subteam Lead",
       date: "Sep 2024 – Present",
+      featured: true,
+      cover: "images/fsae-team-michigan.jpg",
       summary: "Leading the battery subteam of the University of Windsor Formula SAE electric team through design, integration and testing of a 470 V accumulator.",
       highlights: [
         "Lead a team of 30 students designing a 470 V accumulator for an electric racecar.",
@@ -103,7 +105,9 @@ var LAP_SOC = [95.9, 91.7, 87.5, 83.2, 79.0, 74.7, 70.3, 65.9, 61.4, 57.0, 52.4,
         "Led accumulator testing and validation, earning the team's first Formula SAE battery technical inspection sticker."
       ],
       tags: ["High voltage testing", "Test bench validation", "Team lead"],
-      media: []
+      media: [
+        { type: "image", src: "images/fsae-team-michigan.jpg", alt: "The University of Windsor Formula SAE electric team and car in front of the Michigan International Speedway sign", caption: "The University of Windsor Formula SAE electric team at Michigan International Speedway", wide: true }
+      ]
     },
     {
       slug: "cell-sensing-board-adbms6830b",
@@ -202,7 +206,11 @@ var LAP_SOC = [95.9, 91.7, 87.5, 83.2, 79.0, 74.7, 70.3, 65.9, 61.4, 57.0, 52.4,
         "Wrote the requirements, schedule and budget documentation used to track milestones."
       ],
       tags: ["Arduino", "C++", "Closed-loop control"],
-      media: []
+      cover: "images/robot-car-side.jpg",
+      media: [
+        { type: "image", src: "images/robot-car-side.jpg", alt: "Side view of the robot car: an Arduino chassis with yellow wheels towing a black and grey LEGO trailer with a paper tube on top", caption: "Side view" },
+        { type: "image", src: "images/robot-car-top.jpg", alt: "Top view of the robot car and LEGO trailer with its servo and wiring", caption: "Top view" }
+      ]
     }
   ];
 })();
